@@ -19,6 +19,30 @@ def split_dataset(data):
 	test = array(split(test, len(test)/7))
 	return train, test
 
+# evaluate one or more weekly forecasts against expected values
+def evaluate_forecasts(actual, predicted):
+	scores = list()
+	# calculate an RMSE score for each day
+	for i in range(actual.shape[1]):
+		# calculate mse
+		mse = mean_squared_error(actual[:, i], predicted[:, i])
+		# calculate rmse
+		rmse = sqrt(mse)
+		# store
+		scores.append(rmse)
+	# calculate overall RMSE
+	s = 0
+	for row in range(actual.shape[0]):
+		for col in range(actual.shape[1]):
+			s += (actual[row, col] - predicted[row, col])**2
+	score = sqrt(s / (actual.shape[0] * actual.shape[1]))
+	return score, scores
+
+# summarize scores
+def summarize_scores(name, score, scores):
+	s_scores = ', '.join(['%.1f' % s for s in scores])
+	print('%s: [%.3f] %s' % (name, score, s_scores))
+
 # convert history into inputs and outputs
 def to_supervised(train, n_input, n_out=7):
 	# flatten data
@@ -57,12 +81,51 @@ def build_model(train, n_input):
 	model.fit(train_x, train_y, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	return model
 
+# make a forecast
+def forecast(model, history, n_input):
+	# flatten data
+	data = array(history)
+	data = data.reshape((data.shape[0]*data.shape[1], data.shape[2]))
+	# retrieve last observations for input data
+	input_x = data[-n_input:, 0]
+	# reshape into [1, n_input, 1]
+	input_x = input_x.reshape((1, len(input_x), 1))
+	# forecast the next week
+	yhat = model.predict(input_x, verbose=0)
+	# we only want the vector forecast
+	yhat = yhat[0]
+	return yhat
+
+# evaluate a single model
+def evaluate_model(train, test, n_input):
+	# fit model
+	model = build_model(train, n_input)
+	# history is a list of weekly data
+	history = [x for x in train]
+	# walk-forward validation over each week
+	predictions = list()
+	for i in range(len(test)):
+		# predict the week
+		yhat_sequence = forecast(model, history, n_input)
+		# store the predictions
+		predictions.append(yhat_sequence)
+		# get real observation and add to history for predicting the next week
+		history.append(test[i, :])
+	# evaluate predictions days for each week
+	predictions = array(predictions)
+	score, scores = evaluate_forecasts(test[:, :, 0], predictions)
+	return score, scores
+
 # load the new file
 dataset = read_csv('household_power_consumption_days.csv', header=0, infer_datetime_format=True, parse_dates=['datetime'], index_col=['datetime'])
 # split into train and test
 train, test = split_dataset(dataset.values)
 # evaluate model and get scores
 n_input = 7
-#train the model
-model = build_model(train, n_input)
+score, scores = evaluate_model(train, test, n_input)
 # summarize scores
+summarize_scores('lstm', score, scores)
+# plot scores
+days = ['sun', 'mon', 'tue', 'wed', 'thr', 'fri', 'sat']
+pyplot.plot(days, scores, marker='o', label='lstm')
+pyplot.show()
