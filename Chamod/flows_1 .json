@@ -1,0 +1,106 @@
+[
+    {
+        "id": "9f1b100c.acf7c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "458af67d.4516d8",
+        "type": "inject",
+        "z": "9f1b100c.acf7c",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "b39710ba.98e9e"
+            ]
+        ]
+    },
+    {
+        "id": "8d8d4ad4.ef8d28",
+        "type": "csv",
+        "z": "9f1b100c.acf7c",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "x": 370,
+        "y": 180,
+        "wires": [
+            [
+                "66e410dc.269cd"
+            ]
+        ]
+    },
+    {
+        "id": "c68e5c4e.09fd2",
+        "type": "debug",
+        "z": "9f1b100c.acf7c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 790,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "b39710ba.98e9e",
+        "type": "file in",
+        "z": "9f1b100c.acf7c",
+        "name": "",
+        "filename": "A:\\INTELLISR\\MICRO_JOBS\\SEMS Resourses\\Chamod\\household_power_consumption.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 380,
+        "y": 240,
+        "wires": [
+            [
+                "8d8d4ad4.ef8d28"
+            ]
+        ]
+    },
+    {
+        "id": "66e410dc.269cd",
+        "type": "delay",
+        "z": "9f1b100c.acf7c",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "minute",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 570,
+        "y": 180,
+        "wires": [
+            [
+                "c68e5c4e.09fd2"
+            ]
+        ]
+    }
+]

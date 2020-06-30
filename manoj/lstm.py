@@ -14,6 +14,7 @@ from keras.layers import LSTM
 def split_dataset(data):
 	# split into standard weeks
 	train, test = data[1:-328], data[-328:-6]
+	print(train)
 	# restructure into windows of weekly data
 	train = array(split(train, len(train)/7))
 	test = array(split(test, len(test)/7))
@@ -45,7 +46,7 @@ def build_model(train, n_input):
 	# prepare data
 	train_x, train_y = to_supervised(train, n_input)
 	# define parameters
-	verbose, epochs, batch_size = 0, 70, 16
+	verbose, epochs, batch_size = 1, 70, 16
 	n_timesteps, n_features, n_outputs = train_x.shape[1], train_x.shape[2], train_y.shape[1]
 	# define model
 	model = Sequential()

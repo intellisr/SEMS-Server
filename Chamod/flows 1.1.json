@@ -1,0 +1,143 @@
+[
+    {
+        "id": "93c553cc.e6361",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "717f4c3d.57b614",
+        "type": "inject",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "f43d0a14.94a7e8"
+            ]
+        ]
+    },
+    {
+        "id": "c17dcc47.cdc81",
+        "type": "csv",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "x": 370,
+        "y": 180,
+        "wires": [
+            [
+                "c1e08e15.f074e"
+            ]
+        ]
+    },
+    {
+        "id": "3f04cb1e.cd21d4",
+        "type": "debug",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 910,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f43d0a14.94a7e8",
+        "type": "file in",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "filename": "A:\\INTELLISR\\MICRO_JOBS\\SEMS Resourses\\Chamod\\household_power_consumption.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 380,
+        "y": 240,
+        "wires": [
+            [
+                "c17dcc47.cdc81"
+            ]
+        ]
+    },
+    {
+        "id": "c1e08e15.f074e",
+        "type": "delay",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 580,
+        "y": 180,
+        "wires": [
+            [
+                "708a366d.798948"
+            ]
+        ]
+    },
+    {
+        "id": "f4dff71e.da36f8",
+        "type": "http request",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "http://127.0.0.1:5000/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 670,
+        "y": 100,
+        "wires": [
+            [
+                "3f04cb1e.cd21d4"
+            ]
+        ]
+    },
+    {
+        "id": "708a366d.798948",
+        "type": "json",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "f4dff71e.da36f8"
+            ]
+        ]
+    }
+]
