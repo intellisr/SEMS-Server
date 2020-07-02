@@ -10,6 +10,6 @@ clusters, centroids = kmeans1d.cluster(data, k)
 #print(clusters)
 print("Law : 0 <= x <",centroids[0])
 print("Medium : ",centroids[0],"<= x <",centroids[1])
-print("High : ",centroids[0]," <= x")
+print("High : ",centroids[1]," <= x")
 
 
