@@ -91,7 +91,7 @@ def forecast(model, history, n_input):
 	# reshape into [1, n_input, 1]
 	input_x = input_x.reshape((1, len(input_x), 1))
 	# forecast the next week
-	yhat = model.predict(input_x, verbose=0)
+	yhat = model.predict(input_x, verbose=1)
 	# we only want the vector forecast
 	yhat = yhat[0]
 	return yhat

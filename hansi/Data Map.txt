@@ -1,0 +1,41 @@
+Below Rs. 50,000   - 1
+Between Rs. 50,000 and Rs. 100,000 - 2
+Between Rs. 100,000 and Rs. 200,000 - 3
+Between Rs. 200,000 and Rs. 300,000 - 4
+Between Rs. 300,000 and Rs.400,000 - 5
+Above Rs. 400,000 -6
+
+
+Colombo - 1
+Gampaha - 2
+Kaluthara -3
+Hambantota - 4
+Kandy - 5
+Kurunegala - 6
+Kegalle - 7
+Puttalam - 8
+Anuradhapura - 9
+Matara - 10
+Trincomalee - 11
+Galle - 12
+Ratnapura - 13
+Jaffna - 14
+Nuwara Eliya - 15
+Batticaloa - 16
+Badulla - 17
+Matale -  18 
+
+Less than 1,500 square feet - 1
+1,500 to 2,500 square feet - 2
+2,500 to 3,500 square feet - 3
+3,500 to 4,500 square feet - 4
+More than 4,500 square feet - 5
+
+solar pannel?
+
+yes - 1
+no - 0
+
+Law - 1
+Medium - 2
+High - 3
