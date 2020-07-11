@@ -15,6 +15,7 @@ import joblib
 def split_dataset(data):
 	# split into standard weeks
 	train = data[1:-328]
+	#print(len(train))
 	# restructure into windows of weekly data
 	train = array(split(train, len(train)/7))
 
@@ -62,12 +63,14 @@ dataset = read_csv('household_power_consumption_days.csv', header=0, infer_datet
 
 # split into train Weely
 train = split_dataset(dataset.values)
-
+print(train[0][3])
 # prepare data
 n_input = 7
 train_x, train_y = to_supervised(train, n_input)
 
-#train the model
-model = build_model(train_x, train_y)
 
-joblib.dump(model,'lstmModel.sav')
+
+# #train the model
+# model = build_model(train_x, train_y)
+
+# joblib.dump(model,'lstmModel.sav')

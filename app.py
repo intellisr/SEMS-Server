@@ -24,25 +24,30 @@ def main():
     Uid = ref.get()
     ref2 = db.reference('Units/'+ Uid)
     ref2.update(content)
-    dailyAlgo(content["col1"],content["col10"],content["col7"],content["col8"],content["col9"])   
+    iotData=str(content["col1"])+';'+str(content["col2"])+';'+str(content["col3"])+';'+str(content["col4"])+';'+str(content["col5"])+';'+str(content["col6"])+';'+str(content["col7"])+';'+str(content["col8"])+';'+str(content["col9"])+';'+str(content["col10"])+';'
+    with open(''+content["col10"]+'data.txt', 'a') as f:
+        json.dump(iotData, f, indent=2)
+        f.write('\n')
+    dailyAlgo(content["col1"],Uid,content["col7"],content["col8"],content["col9"])   
     return jsonify("Success")
 
 def dailyAlgo(date,user,unit1,unit2,unit3):
-    db = TinyDB('db.json')
+    tdb = TinyDB('db.json')
     Home = Query()
-    Temp=db.search(Home.user == user)
-    if(Temp == None):
-        db.insert({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })
+    Temp=tdb.search(Home.user == user)
+    if(Temp == []):
+        tdb.insert({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })
     else:
-        if(Temp.date == date):
-            unit1Temp =  Temp.unit1 + unit1
-            unit2Temp =  Temp.unit2 + unit2
-            unit3Temp =  Temp.unit3 + unit3
-            db.insert({'user':user , 'date': date ,'unit1':unit1Temp ,'unit2':unit2Temp , 'unit3':unit3Temp })
+        Temp=Temp[0]
+        if(Temp['date'] == date):
+            unit1Temp =  Temp['unit1'] + unit1
+            unit2Temp =  Temp['unit2'] + unit2
+            unit3Temp =  Temp['unit3'] + unit3
+            tdb.insert({'user':user , 'date': date ,'unit1':unit1Temp ,'unit2':unit2Temp , 'unit3':unit3Temp })
         else:
-            ref = db.reference('dailyUnits/'+ user)
-            ref.set({'user':Temp.user , 'date': Temp.date ,'unit1':Temp.unit1 ,'unit2':Temp.unit2 , 'unit3':Temp.unit3 })
-            db.insert({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })    
+            ref3 = db.reference('dailyUnits/'+ user)
+            ref3.set({'user':Temp['user'] , 'date': Temp['date'] ,'unit1':Temp['unit1'],'unit2':Temp['unit2'] , 'unit3':Temp['unit3']})
+            tdb.insert({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })    
             
 if __name__ == "__main__":
 	app.run(debug=True, use_reloader=True)
