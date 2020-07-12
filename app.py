@@ -3,6 +3,10 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from tinydb import TinyDB, Query
+import numpy as np
+import matplotlib.pyplot as plt
+from datetime import datetime
+import os
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('sems-app-firebase-adminsdk-5jtol-c2d41ac3dd.json')
@@ -35,19 +39,52 @@ def dailyAlgo(date,user,unit1,unit2,unit3):
     tdb = TinyDB('db.json')
     Home = Query()
     Temp=tdb.search(Home.user == user)
+    dateFormat=datetime.strptime(date, '%m/%d/%Y')
+    strdate=dateFormat.strftime('%Y-%m-%d')
     if(Temp == []):
         tdb.insert({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })
     else:
         Temp=Temp[0]
-        if(Temp['date'] == date):
+        print(Temp['date'])
+        print(date)
+        print("====================")
+        if(str(Temp['date']) == str(date)):
             unit1Temp =  Temp['unit1'] + unit1
             unit2Temp =  Temp['unit2'] + unit2
             unit3Temp =  Temp['unit3'] + unit3
-            tdb.insert({'user':user , 'date': date ,'unit1':unit1Temp ,'unit2':unit2Temp , 'unit3':unit3Temp })
+            tdb.update({'user':user , 'date': date ,'unit1':unit1Temp ,'unit2':unit2Temp , 'unit3':unit3Temp })
         else:
-            ref3 = db.reference('dailyUnits/'+ user)
-            ref3.set({'user':Temp['user'] , 'date': Temp['date'] ,'unit1':Temp['unit1'],'unit2':Temp['unit2'] , 'unit3':Temp['unit3']})
-            tdb.insert({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })    
+            ref3 = db.reference('dailyUnits/'+ user + '/' +strdate)
+            ref3.set({'unit1':Temp['unit1'],'unit2':Temp['unit2'] , 'unit3':Temp['unit3']})
+            tdb.update({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })
+            print(strdate)
+
+@app.route('/checkUnits') 
+def checkUnits():
+    #autoCorelate()
+    ref4 = db.reference('dailyUnits/bxh0A3EyQobgNEsITN8oWxuODTw2')
+    daily = ref4.get()
+    for data in daily:
+        days=daily[data]
+        print(days)
+    return jsonify("Success")
+
+def autoCorelate():
+    x = np.array([30,34,32,35,35,39,30,34,32,35,45,59,60,74,72,75,75,79])
+    n = x.size
+    norm = (x - np.mean(x))
+    result = np.correlate(norm, norm, mode='same')
+    acorr = result[n//2 + 1:] / (x.var() * np.arange(n-1, n//2, -1))
+    lag = np.abs(acorr).argmax() + 1    
+    r = acorr[lag-1]
+    print(lag)
+    #print(r)        
+    # if np.abs(r) > 0.5:
+    #   print('Appears to be autocorrelated with r = {}, lag = {}'. format(r, lag))
+    # else: 
+    #   print('Appears to be not autocorrelated')
+    
+
             
 if __name__ == "__main__":
 	app.run(debug=True, use_reloader=True)

@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import LSTM
+from keras.models import load_model
 import joblib
 
 # split a univariate dataset into train/test sets
@@ -70,7 +71,7 @@ train_x, train_y = to_supervised(train, n_input)
 
 
 
-# #train the model
-# model = build_model(train_x, train_y)
-
+#train the model
+model = build_model(train_x, train_y)
+model.save('lstmModel.h5')
 # joblib.dump(model,'lstmModel.sav')
