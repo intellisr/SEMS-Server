@@ -69,23 +69,17 @@ def checkUnits():
         print(days)
     return jsonify("Success")
 
-def autoCorelate():
-    x = np.array([30,34,32,35,35,39,30,34,32,35,45,59,60,74,72,75,75,79])
-    n = x.size
-    norm = (x - np.mean(x))
-    result = np.correlate(norm, norm, mode='same')
-    acorr = result[n//2 + 1:] / (x.var() * np.arange(n-1, n//2, -1))
-    lag = np.abs(acorr).argmax() + 1    
-    r = acorr[lag-1]
-    print(lag)
-    #print(r)        
-    # if np.abs(r) > 0.5:
-    #   print('Appears to be autocorrelated with r = {}, lag = {}'. format(r, lag))
-    # else: 
-    #   print('Appears to be not autocorrelated')
-    
+# def autoCorelate():
+#     x = np.array([30,34,32,35,35,39,30,34,32,35,45,59,60,74,72,75,75,79])
+#     n = x.size
+#     norm = (x - np.mean(x))
+#     result = np.correlate(norm, norm, mode='same')
+#     acorr = result[n//2 + 1:] / (x.var() * np.arange(n-1, n//2, -1))
+#     lag = np.abs(acorr).argmax() + 1    
+#     r = acorr[lag-1]
+#     print(lag)
 
-            
+                
 if __name__ == "__main__":
 	app.run(debug=True, use_reloader=True)
    
