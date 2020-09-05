@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os
+import json
+import csv
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('sems-app-firebase-adminsdk-5jtol-c2d41ac3dd.json')
@@ -34,6 +36,20 @@ def main():
         f.write('\n')
     dailyAlgo(content["col1"],Uid,content["col7"],content["col8"],content["col9"])   
     return jsonify("Success")
+
+@app.route("/report", methods=['POST','GET'])
+def report():
+    # if request.method == 'POST':
+    #    content = request.get_json()
+    ref = db.reference('Paired/')
+    Uid = ref.get()
+    data_parsed = json.loads(Uid)
+    header = data_parsed[0].keys()
+    csv_writer.writerow(header)
+    for i in range(length_data)
+        meetup = data_parsed[i].values()
+        csv_writer.writerow([meetup])
+      
 
 def dailyAlgo(date,user,unit1,unit2,unit3):
     tdb = TinyDB('db.json')

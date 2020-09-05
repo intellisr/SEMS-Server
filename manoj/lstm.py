@@ -15,8 +15,7 @@ import joblib
 # split a univariate dataset into train/test sets
 def split_dataset(data):
 	# split into standard weeks
-	train = data[1:-328]
-	#print(len(train))
+	train = data[0:]
 	# restructure into windows of weekly data
 	train = array(split(train, len(train)/7))
 
@@ -43,11 +42,11 @@ def to_supervised(train, n_input, n_out=7):
 		in_start += 1
 	return array(X), array(y)
 
-# train the model
-def build_model(train_x, train_y):
-
+def build_model(train, n_input):
+	# prepare data
+	train_x, train_y = to_supervised(train, n_input)
 	# define parameters
-	verbose, epochs, batch_size = 1, 70, 16
+	verbose, epochs, batch_size = 0, 70, 16
 	n_timesteps, n_features, n_outputs = train_x.shape[1], train_x.shape[2], train_y.shape[1]
 	# define model
 	model = Sequential()
@@ -59,19 +58,61 @@ def build_model(train_x, train_y):
 	model.fit(train_x, train_y, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	return model
 
-# load the new file
-dataset = read_csv('household_power_consumption_days.csv', header=0, infer_datetime_format=True, parse_dates=['datetime'], index_col=['datetime'])
+# make a forecast
+def forecast(model, history, n_input):
+	# flatten data
+	data = array(history)
+	data = data.reshape((data.shape[0]*data.shape[1], data.shape[2]))
+	# retrieve last observations for input data
+	input_x = data[-n_input:, 0]
+	# reshape into [1, n_input, 1]
+	input_x = input_x.reshape((1, len(input_x), 1))
+	# forecast the next week
+	yhat = model.predict(input_x, verbose=1)
+	# we only want the vector forecast
+	yhat = yhat[0]
+	return yhat
 
-# split into train Weely
-train = split_dataset(dataset.values)
-print(train[0][3])
-# prepare data
-n_input = 7
-train_x, train_y = to_supervised(train, n_input)
+# evaluate a single model
+def get_n_weeks(train, model, n_input ,n_weeks):
+	# fit model
+	model = build_model(train, n_input)
+	# history is a list of weekly data
+	history = [x for x in train]
+	# walk-forward validation over each week
+	predictions = list()
+	for i in range(n_weeks):
+		# predict the week
+		yhat_sequence = forecast(model, history, n_input)
+		# store the predictions
+		predictions.append(yhat_sequence)
+		# get real observation and add to history for predicting the next week
+		history.append(train[i, :])
+	# evaluate predictions days for each week
+	predictions = array(predictions)	
+	return predictions	
 
+def predictActivePower(dataFile,weeks):	
+	# load the new file
+	dataset = read_csv(dataFile, header=0, infer_datetime_format=True, parse_dates=['datetime'], index_col=['datetime'])
+	# split into train Weely
+	train = split_dataset(dataset.values)
+	# prepare data
+	n_input = 7
+	#train the model
+	model = build_model( train, n_input)
+	result=get_n_weeks(train, model, n_input ,weeks)
 
+	return result
 
-#train the model
-model = build_model(train_x, train_y)
-model.save('lstmModel.h5')
-# joblib.dump(model,'lstmModel.sav')
+result=predictActivePower('household_power_consumption_days.csv',4)
+week1=sum(result[0])
+week2=sum(result[1])
+week3=sum(result[2])
+week4=sum(result[3])
+month=week1+week2+week3+week4 
+print("week1 : "+str(week1))
+print("week2 : "+str(week2))
+print("week3 : "+str(week3))
+print("week4 : "+str(week4))
+print("Next Month : "+str(month))
