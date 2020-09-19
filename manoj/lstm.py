@@ -46,14 +46,14 @@ def build_model(train, n_input):
 	# prepare data
 	train_x, train_y = to_supervised(train, n_input)
 	# define parameters
-	verbose, epochs, batch_size = 0, 70, 16
+	verbose, epochs, batch_size = 1, 68, 16
 	n_timesteps, n_features, n_outputs = train_x.shape[1], train_x.shape[2], train_y.shape[1]
 	# define model
 	model = Sequential()
 	model.add(LSTM(200, activation='relu', input_shape=(n_timesteps, n_features)))
-	model.add(Dense(100, activation='relu'))
+	model.add(Dense(200, activation='relu'))
 	model.add(Dense(n_outputs))
-	model.compile(loss='mse', optimizer='adam')
+	model.compile(loss='mse', optimizer='adam',metrics=['acc'])
 	# fit network
 	model.fit(train_x, train_y, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	return model
