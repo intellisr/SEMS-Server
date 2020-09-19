@@ -74,7 +74,7 @@ def forecast(model, history, n_input):
 	return yhat
 
 # evaluate a single model
-def get_n_weeks(train, model, n_input ,n_weeks):
+def get_n_weeks(train, n_input ,n_weeks):
 	# fit model
 	model = build_model(train, n_input)
 	# history is a list of weekly data
@@ -100,8 +100,8 @@ def predictActivePower(dataFile,weeks):
 	# prepare data
 	n_input = 7
 	#train the model
-	model = build_model( train, n_input)
-	result=get_n_weeks(train, model, n_input ,weeks)
+	#model = build_model( train, n_input)
+	result=get_n_weeks(train, n_input ,weeks)
 
 	return result
 
