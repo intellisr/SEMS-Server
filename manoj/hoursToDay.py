@@ -16,4 +16,4 @@ daily_data = daily_groups.sum()
 print(daily_data.shape)
 print(daily_data.head())
 # save
-daily_data.to_csv('household_power_consumption_days.csv')
+daily_data.to_csv('household_power_consumption_days_data.csv')
