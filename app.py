@@ -39,16 +39,11 @@ def main():
 
 @app.route("/report", methods=['POST','GET'])
 def report():
-    # if request.method == 'POST':
-    #    content = request.get_json()
     ref = db.reference('Paired/')
     Uid = ref.get()
     data_parsed = json.loads(Uid)
     header = data_parsed[0].keys()
     csv_writer.writerow(header)
-    for i in range(length_data)
-        meetup = data_parsed[i].values()
-        csv_writer.writerow([meetup])
       
 
 def dailyAlgo(date,user,unit1,unit2,unit3):
@@ -75,25 +70,8 @@ def dailyAlgo(date,user,unit1,unit2,unit3):
             tdb.update({'user':user , 'date': date ,'unit1':unit1 ,'unit2':unit2 , 'unit3':unit3 })
             print(strdate)
 
-@app.route('/checkUnits') 
-def checkUnits():
-    #autoCorelate()
-    ref4 = db.reference('dailyUnits/bxh0A3EyQobgNEsITN8oWxuODTw2')
-    daily = ref4.get()
-    for data in daily:
-        days=daily[data]
-        print(days)
-    return jsonify("Success")
 
-# def autoCorelate():
-#     x = np.array([30,34,32,35,35,39,30,34,32,35,45,59,60,74,72,75,75,79])
-#     n = x.size
-#     norm = (x - np.mean(x))
-#     result = np.correlate(norm, norm, mode='same')
-#     acorr = result[n//2 + 1:] / (x.var() * np.arange(n-1, n//2, -1))
-#     lag = np.abs(acorr).argmax() + 1    
-#     r = acorr[lag-1]
-#     print(lag)
+
 
                 
 if __name__ == "__main__":
