@@ -92,9 +92,10 @@ def get_n_weeks(train, n_input ,n_weeks):
 	predictions = array(predictions)	
 	return predictions	
 
-def predictActivePower(dataFile,weeks):	
+def predictActivePower(dataFile,weeks):
+	dataFile="SEMS2X"	
 	# load the new file
-	dataset = read_csv(dataFile, header=0, infer_datetime_format=True, parse_dates=['datetime'], index_col=['datetime'])
+	dataset = read_csv(dataFile+"days_data.csv", header=0, infer_datetime_format=True, parse_dates=['datetime'], index_col=['datetime'])
 	# split into train Weely
 	train = split_dataset(dataset.values)
 	# prepare data
@@ -104,15 +105,3 @@ def predictActivePower(dataFile,weeks):
 	result=get_n_weeks(train, n_input ,weeks)
 
 	return result
-
-result=predictActivePower('household_power_consumption_days.csv',4)
-week1=sum(result[0])
-week2=sum(result[1])
-week3=sum(result[2])
-week4=sum(result[3])
-month=week1+week2+week3+week4 
-print("week1 : "+str(week1))
-print("week2 : "+str(week2))
-print("week3 : "+str(week3))
-print("week4 : "+str(week4))
-print("Next Month : "+str(month))

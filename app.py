@@ -12,6 +12,7 @@ import json
 import csv
 import preProccess
 import forcast
+import arima
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('sems-app-firebase-adminsdk-5jtol-c2d41ac3dd.json')
@@ -79,17 +80,24 @@ def predict_Profile():
 
 @app.route('/forcastGAP',methods=['GET','POST']) 
 def forcastGAP():
-
     if request.method == 'POST':
-        data = request.get_json()
-        fileName=data['fname']           
-        
-    fileUrl=fileName+"days_data.csv"
-    os.remove(fileUrl)
+         data = request.get_json()
+         fileName=data['fname']           
+    fileName="SEMS1X"    
     preProccess.preProccess(fileName)
-    result=forcast.predictActivePower(fileUrl,4)
+    result=forcast.predictActivePower(fileName,4)
 
     return jsonify(result)
+
+@app.route('/anamaly',methods=['GET','POST']) 
+def anamaly():
+    if request.method == 'POST':
+         data = request.get_json()
+         fileName=data['fname']           
+    fileName="SEMS1X"    
+    result=arima.findAnomaly(fileName)
+
+    return jsonify(result)    
 
 def dayCount(date,user):
     tdb = TinyDB('db.json')
@@ -108,11 +116,9 @@ def dayCount(date,user):
             ref3 = db.reference('dailyUnits/'+ user)
             ref3.set(date)            
 
-
-
                 
 if __name__ == "__main__":
-	app.run(debug=True, use_reloader=True)
+	app.run(host='0.0.0.0',debug=True, use_reloader=True)
    
 
 
