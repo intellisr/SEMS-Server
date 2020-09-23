@@ -55,27 +55,27 @@ def predict_Profile():
 
     if request.method == 'POST':
         data = request.get_json()
-        val1=eval(data['solar'])
-        val2=eval(data['male'])
-        val3=eval(data['female'])
-        val4=eval(data['child'])
-        val5=eval(data['adult'])
-        val6=eval(data['emp'])
-        val7=eval(data['income'])
-        val8=eval(data['district'])
-        val9=eval(data['size'])
-        val10=eval(data['aircon'])
-        val11=eval(data['fan'])
-        val12=eval(data['oven'])
-        val13=eval(data['micro'])
-        val14=eval(data['refig'])
-        val15=eval(data['car'])
-        val16=eval(data['geys'])
+        val1=data['solar']
+        val2=data['male']
+        val3=data['female']
+        val4=data['child']
+        val5=data['adult']
+        val6=data['emp']
+        val7=data['income']
+        val8=data['district']
+        val9=data['size']
+        val10=data['aircon']
+        val11=data['fan']
+        val12=data['oven']
+        val13=data['micro']
+        val14=data['refig']
+        val15=data['car']
+        val16=data['geys']
     
     algorithm=joblib.load('profile.sav')
     #loading the trained algorithm
     result=algorithm.predict([[val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14,val15,val16]])
-    
+    print(result[0])
     return jsonify(result[0])
 
 @app.route('/forcastGAP',methods=['GET','POST']) 
