@@ -83,10 +83,12 @@ def predict_Profile():
 def forcastGAP():
     if request.method == 'POST':
          data = request.get_json()
-         fileName=data['fname']           
-    fileName="SEMS1X"    
+         fileName=data['fname']
+         weeks=data['weeks']           
+    fileName="SEMS2X"
+    weeks=3    
     preProccess.preProccess(fileName)
-    data=forcast.predictActivePower(fileName,4)
+    data=forcast.predictActivePower(fileName,weeks)
     result=data.tolist()
     print(result)
     return jsonify(result)
