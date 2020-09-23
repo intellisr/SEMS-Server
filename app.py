@@ -73,7 +73,7 @@ def predict_Profile():
         val15=data['car']
         val16=data['geys']
     
-    algorithm=joblib.load('profile.sav')
+    algorithm=joblib.load('Profile.sav')
     #loading the trained algorithm
     result=algorithm.predict([[val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14,val15,val16]])
     print(result[0])
