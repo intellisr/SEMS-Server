@@ -6,9 +6,6 @@ import seaborn as sns
 import pmdarima as pm
 from pmdarima.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import storage
 #import libraries
 
 
@@ -21,12 +18,10 @@ def MAPE(y_orig, y_pred):
 #find the MEAN AVERAGE PERCENTAGE error
 
 def findAnomaly(dataFile):
-    dataFile = "SEMS2X"
     ts_dataframe = pd.read_csv(dataFile+"days_data.csv", header=0 , index_col=['datetime'],parse_dates=['datetime'],usecols=['datetime','Global_active_power'])
-    ts_dataframe = ts_dataframe[1:60]
 
     # Now, Anomaly Detection By Confidence Interval Method
-    train, test = train_test_split(ts_dataframe, train_size=55)
+    train, test = train_test_split(ts_dataframe, train_size=20)
     #split data into test data and train data
     model = pm.auto_arima(train, seasonal=True, m=12)
     model.fit(train)
@@ -40,7 +35,7 @@ def findAnomaly(dataFile):
     print('ARIMA Model Accuracy:',acc,'%')
     #call mape function
 
-    date = pd.date_range(start ='2006-12-16', periods = len(forecast) , freq ='MS') 
+    date = pd.date_range(start ='2007-01-01', periods = len(forecast) , freq ='MS') 
     #graph eka hadanna data set karagannawa
 
     # upper bound using MAPE
@@ -65,21 +60,8 @@ def findAnomaly(dataFile):
     plt.legend(['Actual Test', 'Anomaly Detected','Prediction Band'])
     plt.xlabel('datetime')
     plt.xticks(rotation=45)
-    plt.ylabel('Global_active_power')
+    plt.ylabel('Power Units')
     plt.savefig(dataFile+'plot.png')
     #graph print
-
-    # Fetch the service account key JSON file contents
-    cred = credentials.Certificate('sems-app-firebase-adminsdk-5jtol-c2d41ac3dd.json')
-    # Initialize the app with a service account, granting admin privileges
-    firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://sems-app.firebaseio.com/'
-    })
-
-    bucket = storage.bucket()
-    blob = bucket.blob(dataFile+'plot.png')
-    blob.upload_from_filename(
-        "/img/",
-        content_type='image/png',)
 
     return anomaly_value,anomaly_date    

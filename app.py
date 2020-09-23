@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request ,session,js
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+from firebase_admin import storage
 from tinydb import TinyDB, Query
 import numpy as np
 import matplotlib.pyplot as plt
@@ -85,8 +86,9 @@ def forcastGAP():
          fileName=data['fname']           
     fileName="SEMS1X"    
     preProccess.preProccess(fileName)
-    result=forcast.predictActivePower(fileName,4)
-
+    data=forcast.predictActivePower(fileName,4)
+    result=data.tolist()
+    print(result)
     return jsonify(result)
 
 @app.route('/anamaly',methods=['GET','POST']) 
@@ -94,10 +96,14 @@ def anamaly():
     if request.method == 'POST':
          data = request.get_json()
          fileName=data['fname']           
-    fileName="SEMS1X"    
-    result=arima.findAnomaly(fileName)
-
-    return jsonify(result)    
+    fileName="SEMS2X"    
+    anomaly_value,anomaly_date=arima.findAnomaly(fileName)
+    bucket = storage.bucket(name="gs://sems-app.appspot.com")
+    blob = bucket.blob(os.path.basename("/SEMS-Server/"+fileName+'plot.png'))
+    #blob.upload_from_filename(fileName+'plot.png')
+    result=[anomaly_value,anomaly_date]
+    print(result)
+    return jsonify(result)   
 
 def dayCount(date,user):
     tdb = TinyDB('db.json')
