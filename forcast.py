@@ -101,6 +101,16 @@ def predictActivePower(dataFile,weeks):
 	#train the model
 	#model = build_model( train, n_input)
 	result=get_n_weeks(train, n_input ,weeks)
+	week1=sum(result[0])
+	week2=sum(result[1])
+	week3=sum(result[2])
+	week4=sum(result[3])
+	month=week1+week2+week3+week4 
+	print("week1 : "+str(week1))
+	print("week2 : "+str(week2))
+	print("week3 : "+str(week3))
+	print("week4 : "+str(week4))
+	print("Next Month : "+str(month))
 
 	return result
 
