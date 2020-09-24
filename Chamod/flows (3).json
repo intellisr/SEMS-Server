@@ -1,0 +1,549 @@
+[
+    {
+        "id": "93c553cc.e6361",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "fa6141e.d8382c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c344bb6.95acf48",
+        "type": "firebase admin",
+        "z": "",
+        "name": "sems-app"
+    },
+    {
+        "id": "717f4c3d.57b614",
+        "type": "inject",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "f43d0a14.94a7e8"
+            ]
+        ]
+    },
+    {
+        "id": "c17dcc47.cdc81",
+        "type": "csv",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "x": 370,
+        "y": 180,
+        "wires": [
+            [
+                "c1e08e15.f074e"
+            ]
+        ]
+    },
+    {
+        "id": "3f04cb1e.cd21d4",
+        "type": "debug",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 970,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "f43d0a14.94a7e8",
+        "type": "file in",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "filename": "A:\\INTELLISR\\MICRO_JOBS\\SEMS-Server\\Chamod\\household_power_consumption.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 370,
+        "y": 240,
+        "wires": [
+            [
+                "c17dcc47.cdc81"
+            ]
+        ]
+    },
+    {
+        "id": "c1e08e15.f074e",
+        "type": "delay",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 580,
+        "y": 180,
+        "wires": [
+            [
+                "f4dff71e.da36f8"
+            ]
+        ]
+    },
+    {
+        "id": "f4dff71e.da36f8",
+        "type": "http request",
+        "z": "93c553cc.e6361",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "http://127.0.0.1:5000/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 790,
+        "y": 120,
+        "wires": [
+            [
+                "3f04cb1e.cd21d4"
+            ]
+        ]
+    },
+    {
+        "id": "6635e01b.41374",
+        "type": "firebase in",
+        "z": "fa6141e.d8382c",
+        "name": "firebase watch",
+        "ref": "/Switch/SEMS2X/sub1",
+        "dataAtStart": true,
+        "admin": "c344bb6.95acf48",
+        "x": 190,
+        "y": 340,
+        "wires": [
+            [
+                "72e57f8e.40ad3",
+                "352955fc.62f61a"
+            ]
+        ]
+    },
+    {
+        "id": "e3cad46.7f5ed28",
+        "type": "firebase in",
+        "z": "fa6141e.d8382c",
+        "name": "firebase watch",
+        "ref": "/Switch/SEMS2X/sub2",
+        "dataAtStart": true,
+        "admin": "c344bb6.95acf48",
+        "x": 190,
+        "y": 460,
+        "wires": [
+            [
+                "a08829c.7f0d7d8",
+                "7c282086.97a8c"
+            ]
+        ]
+    },
+    {
+        "id": "ba0041a4.5871b",
+        "type": "firebase in",
+        "z": "fa6141e.d8382c",
+        "name": "firebase watch",
+        "ref": "/Switch/SEMS2X/sub3",
+        "dataAtStart": true,
+        "admin": "c344bb6.95acf48",
+        "x": 190,
+        "y": 560,
+        "wires": [
+            [
+                "15e33ac8.716465",
+                "6af02a07.0b1914"
+            ]
+        ]
+    },
+    {
+        "id": "72e57f8e.40ad3",
+        "type": "switch",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [
+                "946f99d7.64fd68"
+            ]
+        ]
+    },
+    {
+        "id": "352955fc.62f61a",
+        "type": "switch",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 360,
+        "wires": [
+            [
+                "6105a33f.d3d95c"
+            ]
+        ]
+    },
+    {
+        "id": "a08829c.7f0d7d8",
+        "type": "switch",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 440,
+        "wires": [
+            [
+                "f1e2bc09.2015d"
+            ]
+        ]
+    },
+    {
+        "id": "7c282086.97a8c",
+        "type": "switch",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 480,
+        "wires": [
+            [
+                "36364d4e.6bfe12"
+            ]
+        ]
+    },
+    {
+        "id": "15e33ac8.716465",
+        "type": "switch",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "10a055af.d8edba"
+            ]
+        ]
+    },
+    {
+        "id": "6af02a07.0b1914",
+        "type": "switch",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 370,
+        "y": 580,
+        "wires": [
+            [
+                "ba61f73a.359728"
+            ]
+        ]
+    },
+    {
+        "id": "946f99d7.64fd68",
+        "type": "debug",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 550,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "6105a33f.d3d95c",
+        "type": "debug",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 550,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "f1e2bc09.2015d",
+        "type": "debug",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 550,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "36364d4e.6bfe12",
+        "type": "debug",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 550,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "10a055af.d8edba",
+        "type": "debug",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 550,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "ba61f73a.359728",
+        "type": "debug",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 550,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "df27b5d3.61aee8",
+        "type": "inject",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "9b05d66e.5b33f8"
+            ]
+        ]
+    },
+    {
+        "id": "83c3ec97.61e5e",
+        "type": "csv",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "x": 410,
+        "y": 140,
+        "wires": [
+            [
+                "19ba9159.eb203f"
+            ]
+        ]
+    },
+    {
+        "id": "2e3d70e6.83d27",
+        "type": "debug",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1010,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "9b05d66e.5b33f8",
+        "type": "file in",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "filename": "A:\\INTELLISR\\MICRO_JOBS\\SEMS-Server\\Chamod\\household_power_consumption.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 410,
+        "y": 200,
+        "wires": [
+            [
+                "83c3ec97.61e5e"
+            ]
+        ]
+    },
+    {
+        "id": "19ba9159.eb203f",
+        "type": "delay",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 620,
+        "y": 140,
+        "wires": [
+            [
+                "c294fe80.955cd"
+            ]
+        ]
+    },
+    {
+        "id": "c294fe80.955cd",
+        "type": "http request",
+        "z": "fa6141e.d8382c",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "http://127.0.0.1:5000/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 830,
+        "y": 80,
+        "wires": [
+            [
+                "2e3d70e6.83d27"
+            ]
+        ]
+    }
+]

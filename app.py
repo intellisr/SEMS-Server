@@ -4,6 +4,8 @@ from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import storage
 from tinydb import TinyDB, Query
+from functools import reduce
+from operator import add 
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
@@ -30,7 +32,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 @app.route("/", methods=['POST','GET'])
 def main():
     if request.method == 'POST':
-       content = request.get_json()
+       content = request.get_json()    
     ref = db.reference('Paired/'+ content["col10"])
     Uid = ref.get()
     ref2 = db.reference('Units/'+ Uid)
@@ -56,6 +58,7 @@ def predict_Profile():
 
     if request.method == 'POST':
         data = request.get_json()
+        print(data)
         val1=data['solar']
         val2=data['male']
         val3=data['female']
@@ -84,21 +87,21 @@ def forcastGAP():
     if request.method == 'POST':
          data = request.get_json()
          fileName=data['fname']
-         weeks=data['weeks']           
-    fileName="SEMS2X"
-    weeks=3    
+         weeks=data['weeks']
+         user=data['user']           
     preProccess.preProccess(fileName)
     data=forcast.predictActivePower(fileName,weeks)
     result=data.tolist()
     print(result)
-    return jsonify(result)
+    ref = db.reference('forcast/'+ user)
+    ref.set(jsonify(result))
+    return jsonify("success")
 
 @app.route('/anamaly',methods=['GET','POST']) 
 def anamaly():
     if request.method == 'POST':
          data = request.get_json()
-         fileName=data['fname']           
-    fileName="SEMS2X"    
+         fileName=data['fname']              
     anomaly_value,anomaly_date=arima.findAnomaly(fileName)
     bucket = storage.bucket(name="gs://sems-app.appspot.com")
     blob = bucket.blob(os.path.basename("/SEMS-Server/"+fileName+'plot.png'))
@@ -111,18 +114,17 @@ def dayCount(date,user):
     tdb = TinyDB('db.json')
     Home = Query()
     Temp=tdb.search(Home.user == user)
-    #dateFormat=datetime.strptime(date, '%m/%d/%Y')
-    #strdate=dateFormat.strftime('%Y-%m-%d')
     if(Temp == []):
-        tdb.insert({'user':user , 'date': date })
+        tdb.insert({'user':user , 'date': date ,'days' : 0 })
         ref3 = db.reference('dailyUnits/'+ user)
         ref3.set(date) 
     else:
         Temp=Temp[0]
         if(str(Temp['date']) != str(date)):
-            tdb.update({'user':user , 'date': date })
+            days= Temp['date'] + 1
+            tdb.update({'user':user , 'date': date ,'days' : days })
             ref3 = db.reference('dailyUnits/'+ user)
-            ref3.set(date)            
+            ref3.set(days)            
 
                 
 if __name__ == "__main__":

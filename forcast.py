@@ -5,11 +5,8 @@ from numpy import array
 from pandas import read_csv
 from sklearn.metrics import mean_squared_error
 from matplotlib import pyplot
-from keras.models import load_model
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Flatten
-from keras.layers import LSTM
+from tensorflow.keras.models import Sequential,load_model
+from tensorflow.keras.layers import Dense, Flatten, LSTM
 import joblib
 
 # split a univariate dataset into train/test sets
@@ -95,7 +92,6 @@ def get_n_weeks(train, n_input ,n_weeks):
 	return predictions	
 
 def predictActivePower(dataFile,weeks):
-	dataFile="SEMS2X"	
 	# load the new file
 	dataset = read_csv(dataFile+"days_data.csv", header=0, infer_datetime_format=True, parse_dates=['datetime'], index_col=['datetime'])
 	# split into train Weely
