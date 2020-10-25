@@ -41,7 +41,7 @@ def main():
     with open(''+content["col10"]+'data.txt', 'a') as f:
         json.dump(iotData, f, indent=2)
         f.write('\n')
-    dayCount(content["col1"],Uid)   
+    #dayCount(content["col1"],Uid)   
     return jsonify("Success")
     
 
@@ -81,19 +81,19 @@ def forcastGAP():
          fileName=data['fname']
          weeks=data['weeks']
          user=data['user']
-    fileName="SEMS2X"
-    user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"
-    weeks=4
-    ref = db.reference('forcastStatus/'+ user)
-    ref.set(0)                
+    #fileName="SEMS2X"
+    #user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"
+    #weeks=4
+    # ref = db.reference('forcastStatus/'+ user)
+    # ref.set(0)                
     preProccess.preProccess(fileName)
     data=forcast.predictActivePower(fileName,weeks)
     result=data.tolist()
-    ref = db.reference('forcast/'+ user)
-    ref.set(result)
-    ref = db.reference('forcastStatus/'+ user)
-    ref.set(1) 
-    return jsonify("success")
+    # ref = db.reference('forcast/'+ user)
+    # ref.set(result)
+    # ref = db.reference('forcastStatus/'+ user)
+    # ref.set(1) 
+    return jsonify(result)
 
 @app.route('/anamaly',methods=['GET','POST']) 
 def anamaly():
@@ -101,18 +101,15 @@ def anamaly():
          data = request.get_json()
          fileName=data['fname']
          user=data['user'] 
-    fileName="SEMS2X"
-    user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"                   
+    #fileName="SEMS2X"
+    #user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"                   
     anomaly_value,anomaly_date=arima.findAnomaly(fileName)
     bucket = storage.bucket(name="gs://sems-app.appspot.com")
     blob = bucket.blob(os.path.basename("/SEMS-Server/"+fileName+'plot.png'))
     #blob.upload_from_filename(fileName+'plot.png')
     result=tuple(zip(anomaly_value, anomaly_date))
-    #resultSet=json.dumps(result)
-    ref = db.reference('forcast/'+ user)
-    ref.set(result)
-    print(result)
-    return jsonify(result)   
+    resultSet=json.dumps(result)
+    return jsonify(resultSet)   
 
 def dayCount(date,user):
     tdb = TinyDB('db.json')
