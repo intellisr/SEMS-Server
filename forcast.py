@@ -12,7 +12,10 @@ import joblib
 # split a univariate dataset into train/test sets
 def split_dataset(data):
 	# split into standard weeks
-	train = data[0:]
+	trains = data[0:]
+	trainTemp = (int)(len(trains)/7)
+	trainX= trainTemp * 7
+	train = data[0:trainX]
 	# restructure into windows of weekly data
 	train = array(split(train, len(train)/7))
 
@@ -98,8 +101,7 @@ def predictActivePower(dataFile,weeks):
 	train = split_dataset(dataset.values)
 	# prepare data
 	n_input = 7
-	#train the model
-	#model = build_model( train, n_input)
+
 	result=get_n_weeks(train, n_input ,weeks)
 	# week1=sum(result[0])
 	# week2=sum(result[1])

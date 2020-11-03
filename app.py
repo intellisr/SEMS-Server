@@ -62,15 +62,16 @@ def predict_Profile():
         val9=data['size']
         val10=data['aircon']
         val11=data['fan']
-        val12=data['oven']
-        val13=data['micro']
+        val12=data['micro']
+        val13=data['tv']
         val14=data['refig']
-        val15=data['car']
+        val15=data['iron']
         val16=data['geys']
+        val17=data['wash']
     
     algorithm=joblib.load('Profile.sav')
     #loading the trained algorithm
-    result=algorithm.predict([[val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14,val15,val16]])
+    result=algorithm.predict([[val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14,val15,val16,val17]])
     print(result[0])
     return jsonify(result[0])
 
@@ -81,16 +82,16 @@ def forcastGAP():
          fileName=data['fname']
          weeks=data['weeks']
          user=data['user']
-    #fileName="SEMS2X"
+    fileName="SEMS2X"
     #user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"
-    #weeks=4
+    weeks=4
     # ref = db.reference('forcastStatus/'+ user)
     # ref.set(0)                
     preProccess.preProccess(fileName)
     data=forcast.predictActivePower(fileName,weeks)
     result=data.tolist()
     # ref = db.reference('forcast/'+ user)
-    # ref.set(result)
+    # ref.set(result)   
     # ref = db.reference('forcastStatus/'+ user)
     # ref.set(1) 
     return jsonify(result)
@@ -101,15 +102,15 @@ def anamaly():
          data = request.get_json()
          fileName=data['fname']
          user=data['user'] 
-    #fileName="SEMS2X"
-    #user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"                   
+    fileName="SEMS2X"
+    user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"                   
     anomaly_value,anomaly_date=arima.findAnomaly(fileName)
-    bucket = storage.bucket(name="gs://sems-app.appspot.com")
-    blob = bucket.blob(os.path.basename("/SEMS-Server/"+fileName+'plot.png'))
-    #blob.upload_from_filename(fileName+'plot.png')
-    result=tuple(zip(anomaly_value, anomaly_date))
-    resultSet=json.dumps(result)
-    return jsonify(resultSet)   
+    resultSet=json.dumps(anomaly_value)
+    return jsonify(resultSet)
+
+@app.route("/imgs/<path:path>")
+def images(path):
+    return '<img src=' + url_for('static',filename=path+'plot.png') + '>'       
 
 def dayCount(date,user):
     tdb = TinyDB('db.json')

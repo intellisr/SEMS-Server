@@ -8,8 +8,8 @@ dataset=pd.read_csv('master.csv').values
 
 dataset = dataset[~np.isnan(dataset).any(axis=1)]
 
-data=dataset[:,0:16]
-target=dataset[:,16]
+data=dataset[:,0:17]
+target=dataset[:,17]
 
 from sklearn.model_selection import train_test_split
 #dataset splitting function
@@ -30,7 +30,7 @@ result=algorithm.predict(test_data)
 #print('Predicted Target:',result)
 
 acc=accuracy_score(test_target,result)
-
+#print(result)
 print('Accuracy:',int(acc*100),'%')
 
 joblib.dump(algorithm,'Profile.sav')
