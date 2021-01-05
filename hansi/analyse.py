@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sb
 # Load data
-df=pd.read_csv('masterAll.csv')
+df=pd.read_csv('master.csv')
 df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 df[:5] 
 print(df.shape) 

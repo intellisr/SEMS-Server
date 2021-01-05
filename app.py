@@ -2,7 +2,6 @@ from flask import Flask, render_template, redirect, url_for, request ,session,js
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-from firebase_admin import storage
 from tinydb import TinyDB, Query
 from functools import reduce
 from operator import add 
@@ -40,8 +39,7 @@ def main():
     iotData=str(content["col1"])+';'+str(content["col2"])+';'+str(content["col3"])+';'+str(content["col4"])+';'+str(content["col5"])+';'+str(content["col6"])+';'+str(content["col7"])+';'+str(content["col8"])+';'+str(content["col9"])+';'
     with open(''+content["col10"]+'data.txt', 'a') as f:
         json.dump(iotData, f, indent=2)
-        f.write('\n')
-    #dayCount(content["col1"],Uid)   
+        f.write('\n') 
     return jsonify("Success")
     
 
@@ -81,19 +79,11 @@ def forcastGAP():
          data = request.get_json()
          fileName=data['fname']
          weeks=data['weeks']
-         user=data['user']
     fileName="SEMS2X"
-    #user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"
-    weeks=4
-    # ref = db.reference('forcastStatus/'+ user)
-    # ref.set(0)                
+    weeks=4              
     preProccess.preProccess(fileName)
     data=forcast.predictActivePower(fileName,weeks)
     result=data.tolist()
-    # ref = db.reference('forcast/'+ user)
-    # ref.set(result)   
-    # ref = db.reference('forcastStatus/'+ user)
-    # ref.set(1) 
     return jsonify(result)
 
 @app.route('/anamaly',methods=['GET','POST']) 
@@ -101,16 +91,15 @@ def anamaly():
     if request.method == 'POST':
          data = request.get_json()
          fileName=data['fname']
-         user=data['user'] 
-    fileName="SEMS2X"
-    user="V7r2O2fsqVYsNH0z8ydPItaGBSf1"                   
+    fileName="SEMS2X"                   
     anomaly_value,anomaly_date=arima.findAnomaly(fileName)
     resultSet=json.dumps(anomaly_value)
     return jsonify(resultSet)
 
 @app.route("/imgs/<path:path>")
 def images(path):
-    return '<img src=' + url_for('static',filename=path+'plot.png') + '>'       
+    return '<img src=' + url_for('static',filename=path+'plot.png') + '>'
+           
 
 def dayCount(date,user):
     tdb = TinyDB('db.json')

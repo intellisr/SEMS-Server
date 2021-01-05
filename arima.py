@@ -6,14 +6,10 @@ import seaborn as sns
 import pmdarima as pm
 from pmdarima.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-#import libraries
-
-
-#read csv file unit wise electricity paramaters (global active power and data parameters only taken)
 
 def MAPE(y_orig, y_pred):
     diff = y_orig - y_pred
-    MAPE = np.mean((abs(y_orig - y_pred)/y_orig)  * 100.)
+    MAPE = np.mean((abs(y_orig - y_pred)/y_orig)  * 100)
     return MAPE
 #find the MEAN AVERAGE PERCENTAGE error
 

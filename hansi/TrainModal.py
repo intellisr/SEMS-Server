@@ -7,7 +7,6 @@ import joblib
 dataset=pd.read_csv('master.csv').values
 
 dataset = dataset[~np.isnan(dataset).any(axis=1)]
-
 data=dataset[:,0:17]
 target=dataset[:,17]
 

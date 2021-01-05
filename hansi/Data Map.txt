@@ -36,6 +36,6 @@ solar pannel?
 yes - 1
 no - 0
 
-Law - 1
+Low - 0
 Medium - 2
 High - 3
