@@ -12,8 +12,7 @@ def fill_missing(values):
 			if isnan(values[row, col]):
 				values[row, col] = values[row - one_day, col]
 
-def preProccess(fileName):
-    fileName='SEMS1X'                
+def preProccess(fileName):              
     dataset = read_csv(fileName +'data.txt', sep=';', header=0, low_memory=False, infer_datetime_format=True, parse_dates={'datetime':[0,1]}, index_col=['datetime'])
     # mark all missing values
     dataset.replace('?', nan, inplace=True)
@@ -31,4 +30,4 @@ def preProccess(fileName):
     daily_groups = dataset2.resample('D')
     daily_data = daily_groups.sum()
     # save
-    daily_data.to_csv(fileName +'days_data.csv')
+    daily_data.to_csv(fileName +'days_dataa.csv')

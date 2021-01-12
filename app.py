@@ -2,12 +2,9 @@ from flask import Flask, render_template, redirect, url_for, request ,session,js
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-from tinydb import TinyDB, Query
 from functools import reduce
 from operator import add 
 import numpy as np
-import matplotlib.pyplot as plt
-from datetime import datetime
 import joblib
 import os
 import json
@@ -68,9 +65,8 @@ def predict_Profile():
         val17=data['wash']
     
     algorithm=joblib.load('Profile.sav')
-    #loading the trained algorithm
-    result=algorithm.predict([[val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14,val15,val16,val17]])
-    print(result[0])
+    result=algorithm.predict([[0,2,2,0,0,3,2,2,2,1,2,0,1,1,1,1,1]])
+    #result=algorithm.predict([[val1,val2,val3,val4,val5,val6,val7,val8,val9,val10,val11,val12,val13,val14,val15,val16,val17]])
     return jsonify(result[0])
 
 @app.route('/forcastGAP',methods=['GET','POST']) 
@@ -92,31 +88,13 @@ def anamaly():
          data = request.get_json()
          fileName=data['fname']
     fileName="SEMS2X"                   
-    anomaly_value,anomaly_date=arima.findAnomaly(fileName)
-    resultSet=json.dumps(anomaly_value)
-    return jsonify(resultSet)
+    arima.findAnomaly(fileName)
+    return jsonify("success")
 
 @app.route("/imgs/<path:path>")
 def images(path):
     return '<img src=' + url_for('static',filename=path+'plot.png') + '>'
            
-
-def dayCount(date,user):
-    tdb = TinyDB('db.json')
-    Home = Query()
-    Temp=tdb.search(Home.user == user)
-    if(Temp == []):
-        tdb.insert({'user':user , 'date': date ,'days' : 0 })
-        ref3 = db.reference('dailyUnits/'+ user)
-        ref3.set(date) 
-    else:
-        Temp=Temp[0]
-        if(str(Temp['date']) != str(date)):
-            days= Temp['date'] + 1
-            tdb.update({'user':user , 'date': date ,'days' : days })
-            ref3 = db.reference('dailyUnits/'+ user)
-            ref3.set(days)            
-
                 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0',debug=True, use_reloader=True)

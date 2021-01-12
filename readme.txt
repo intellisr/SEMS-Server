@@ -1,4 +1,4 @@
-ssh -i "intellisr.pem" ubuntu@34.207.70.88
+ssh -i "<server>.pem" ubuntu@<ip>
 
 sems2020.015@gmail.com
 Sems@2020015

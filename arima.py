@@ -44,7 +44,6 @@ def findAnomaly(dataFile):
             anomaly_value.append(test_actuals[i])
             anomaly_date.append(date[i].to_pydatetime().date())
     #if anomaly detected fill data into array using append       
-    #print(anomaly_value,anomaly_date)
 
     #upper bound and lower bound using MAPE
     predicted_ub = forecast + (mape * 0.01 * forecast)
@@ -59,8 +58,7 @@ def findAnomaly(dataFile):
     plt.xticks(rotation=45)
     plt.ylabel('Power Units')
     plt.savefig("static/"+dataFile+'plot.png')
+    plt.show()
     #graph print
-
-    #print(anomaly_date[1].to_pydatetime().date())
 
     return anomaly_value,anomaly_date    
